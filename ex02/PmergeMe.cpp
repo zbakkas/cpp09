@@ -62,10 +62,12 @@ void    sort_vector( std::vector<int> &vector_sequence)
     std::vector<int>::iterator insertion_point;
 
     i = 0;
-    int is_pended =0;
+    int is_pended =-1;
     std::vector<int> vector_main;
     std::vector<int> vector_pend;
-    int jacobstal[14];
+    int jacobstal[14]= {0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731};
+
+ 
     print_vector('b',vector_sequence);///
     start = clock();
     if (vector_sequence.size() % 2 != 0)

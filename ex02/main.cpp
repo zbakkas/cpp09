@@ -16,6 +16,6 @@ int main(int ac, char **ag)
 		return (1);
 	}
     sort_vector(vector_sequence);
-    sort_deque(deque_sequence);
+    // sort_deque(deque_sequence);
     return (0);
 }
