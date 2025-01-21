@@ -19,100 +19,128 @@ bool isvalid(std::string str)
    
 }
 
+bool is_stack_valid(int i)
+{
+    if(i <=2)
+        return false;
+    return true;
+    
+}
+
 
 void rpn(std::string str)
 {
-    std::cout << "RPN " << str << std::endl;
+    // std::cout << "RPN " << str << std::endl;
     std::stack<std::string> main_stack;
-    std::stack<std::string> temp_stack;
-    std::stack<std::string> digit_stack;
     std::stringstream ss(str);
+    std::stringstream ss2(str);
     std::string token;
-    while (ss >> token) 
+    int number =0;
+    int temp =0;
+
+    while (ss2 >> token)
     {
         if(!isvalid(token))
         {
             std::cout << "Error 00" << std::endl;
             return;
         }
-        // std::cout << "Token: " << token << std::endl;
-        main_stack.push(token); 
+        if(isdigit(token[0]))
+        {
+           number++;
+        }
+        else
+            temp++;
     }
-
-    // for (size_t i = 0; i < main_stack.size(); ++i) 
-    // {
-    //     std::cout << main_stack.top() << std::endl;
-    //     main_stack.pop();
-    // }
-
-    while (main_stack.size() > 0)
+    if(temp+1 != number || number == 1)
     {
-            // std::cout << main_stack.top() << std::endl;
-
-            if(isdigit(main_stack.top()[0]))
-            {
-                digit_stack.push(main_stack.top());
-            }
-            else
-            {
-                temp_stack.push(main_stack.top());
-            }
-        main_stack.pop();
+        std::cout << "number or operator" << std::endl;
+        return;
     }
+
     
-    if(temp_stack.size() +1 != digit_stack.size())
+    temp =0;
+    number =0;
+    
+    while (ss >> token) 
     {
-        std::cout << "Error 02" << std::endl;
-        return ;
-    }
-    calculate(digit_stack,temp_stack);
-    // while (temp_stack.size() > 0)
-    // {
-    //     std::cout <<" Temp " << temp_stack.top() << std::endl;
-    //     temp_stack.pop();
-    // }
-    // while (digit_stack.size() > 0)
-    // {
-    //     std::cout <<"digit "<< digit_stack.top() << std::endl;
-    //     digit_stack.pop();
-    // }
+        main_stack.push(token); 
+        if(main_stack.top() == "+" )
+        {
+            if(!is_stack_valid(main_stack.size()))
+            {
+                std::cout << "Error op" << std::endl;
+                return;
+            }
+            main_stack.pop();
+            // std::cout << "+ "  << std::endl;
+            temp = atoi(main_stack.top().c_str());
+            // std::cout << "Temp: " << temp << std::endl;
+            main_stack.pop();
+            number  = (atoi(main_stack.top().c_str()) + temp);
+            main_stack.pop();
+            main_stack.push(std::to_string(number));
+            // std::cout << "Re: " << re << std::endl;
 
-   
+        } 
+        else if(main_stack.top() == "-")
+        {
+            if(!is_stack_valid(main_stack.size()))
+            {
+                std::cout << "Error op" << std::endl;
+                return;
+            }
+            main_stack.pop();
+            // std::cout << "- "  << std::endl;
+            temp = atoi(main_stack.top().c_str());
+            main_stack.pop();
+            number  = (atoi(main_stack.top().c_str()) - temp);
+            main_stack.pop();
+            main_stack.push(std::to_string(number));
+            // std::cout << "Re: " << re << std::endl;
+        }
+        else if(main_stack.top() == "*")
+        {
+            if(!is_stack_valid(main_stack.size()))
+            {
+                std::cout << "Error op" << std::endl;
+                return;
+            }
+            main_stack.pop();
+            // std::cout << "* "  << std::endl;
+            temp = atoi(main_stack.top().c_str());
+            main_stack.pop();
+            number  = (atoi(main_stack.top().c_str()) * temp);
+            main_stack.pop();
+            main_stack.push(std::to_string(number));
+            // std::cout << "Re: " << re << std::endl;
+        }
+        else if(main_stack.top() == "/")
+        {
+            if(!is_stack_valid(main_stack.size()))
+            {
+                std::cout << "Error op" << std::endl;
+                return;
+            }
+            main_stack.pop();
+            // std::cout << "/"  << std::endl;
+            temp = atoi(main_stack.top().c_str());
+            main_stack.pop();
+            if(temp == 0)
+            {
+                std::cout << "Error / 0" << std::endl;
+                return;
+            }
+            number  = (atoi(main_stack.top().c_str()) / temp);
+            main_stack.pop();
+            main_stack.push(std::to_string(number));
+            // std::cout << "Re: " << re << std::endl;
+        }
+        
+    }
+    std::cout << "=> "<< number << std::endl;
+
 }
 
-void calculate(std::stack<std::string> &digit_stack, std::stack<std::string> &temp_stack)
-{
-
-    int re = 0;
-    re +=atoi(digit_stack.top().c_str()) ;
-    digit_stack.pop();
-
-    while (temp_stack.size() > 0)
-    {
-    if(temp_stack.top() == "+")
-    {
-        re += atoi(digit_stack.top().c_str()) ;
-        digit_stack.pop();
-            
-    }
-    else if(temp_stack.top() == "-")
-    {
-        re -= atoi(digit_stack.top().c_str()) ;
-        digit_stack.pop();
-    }
-    else if(temp_stack.top() == "*")
-    {
-        re *= atoi(digit_stack.top().c_str()) ;
-        digit_stack.pop();
-    }
-    else if(temp_stack.top() == "/")
-    {
-         re /= atoi(digit_stack.top().c_str()) ;
-        digit_stack.pop();
-    }
-    temp_stack.pop();
-    }
 
 
-    std::cout << re << std::endl;
-}
