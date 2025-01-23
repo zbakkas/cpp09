@@ -53,6 +53,8 @@ void    print_vector(char c ,std::vector<int> &vector_sequence)
         ++i;
     }
 }
+// 20 =>
+// 37 47 9 54 25 60 92 83 29 27 18 17 22 57 31 79 91 78 34 48 
 void    sort_vector( std::vector<int> &vector_sequence)
 {
     size_t  i;
@@ -65,51 +67,98 @@ void    sort_vector( std::vector<int> &vector_sequence)
     int is_pended =-1;
     std::vector<int> vector_main;
     std::vector<int> vector_pend;
-    int jacobstal[14]= {0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731};
+    int jacobstal[16]= {0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461, 10923};
 
  
     print_vector('b',vector_sequence);///
     start = clock();
     if (vector_sequence.size() % 2 != 0)
         is_pended = vector_sequence[vector_sequence.size() - 1];
+    // std::cout << "is_pended: " << is_pended << std::endl;
     while (i < vector_sequence.size() && i + 1 < vector_sequence.size())
     {
         vector_main.push_back((std::max(vector_sequence[i], vector_sequence[i + 1])));
         vector_pend.push_back((std::min(vector_sequence[i], vector_sequence[i + 1])));
         i += 2;
     }
+
     if (is_pended != -1)
         vector_pend.push_back(is_pended);
+
+    std::cout << " => vector_pend B"  << std::endl;//
+    for(i = 0; i < vector_pend.size(); i++)//
+        std::cout << vector_pend[i] << " ";//
+    std::cout << std::endl;//
+
+    std::cout << "vector_main B"  << std::endl;//
+    for(i = 0; i < vector_main.size(); i++)//
+        std::cout << vector_main[i] << " ";//
+    std::cout << std::endl;//
+
     std::sort(vector_main.begin(), vector_main.end());
+
+    std::cout << "vector_main A"  << std::endl;//
+    for(i = 0; i < vector_main.size(); i++)//
+        std::cout << vector_main[i] << " ";//
+    std::cout << std::endl;//
+
     vector_main.insert(vector_main.begin(), vector_pend[0]);
+
+      std::cout << "vector_main A 2"  << std::endl;//
+    for(i = 0; i < vector_main.size(); i++)//
+        std::cout << vector_main[i] << " ";//
+    std::cout << std::endl;//
+
     vector_pend.erase(vector_pend.begin());
-    i = 2;
-    while (i < vector_pend.size())
+
+    std::cout << "=> vector_pend A"  << std::endl;//
+    for(i = 0; i < vector_pend.size(); i++)//
+        std::cout << vector_pend[i] << " ";//
+    std::cout << std::endl;//
+
+///////////////////////patre 2////////////////////////
+
+    for (i =2 ; i < vector_pend.size(); i++)//9
     {
         j = jacobstal[i];
         if (j > vector_pend.size())
+        {
+            std::cout << "j => vector_pend.size() " << j << std::endl;
             break;
+        }
         insertion_point = std::lower_bound(vector_main.begin(), vector_main.end(), vector_pend[j - 1]);
+        
+        std::cout << "insertion_point " << *insertion_point << std::endl;
+
         vector_main.insert(insertion_point, vector_pend[j - 1]);
         vector_pend.erase(vector_pend.begin() + (j - 1));
-        ++i;
+
     }
-    i = 0;
-    while (i < vector_pend.size())
+
+    std::cout << "vector_main A for"  << std::endl;//
+    for(i = 0; i < vector_main.size(); i++)//
+        std::cout << vector_main[i] << " ";//
+    std::cout << std::endl;//
+
+    std::cout << " => vector_pend A for"  << std::endl;//
+    for(i = 0; i < vector_pend.size(); i++)//
+        std::cout << vector_pend[i] << " ";//
+    std::cout << std::endl;//
+
+    for (i =0; i < vector_pend.size() ; i++)
     {
         insertion_point = std::lower_bound(vector_main.begin(), vector_main.end(), vector_pend[i]);
         vector_main.insert(insertion_point, vector_pend[i]);
-        ++i;
     }
     end = clock();
     vector_sequence = vector_main;
-    print_vector('a',vector_sequence);//////
-    std::cout   << "Time to process a range of "
-                /*<< this->number_of_elements*/
-                <<  " elements with std::vector\t: "
-                << end - start
-                << " us"
-                << std::endl;
+    // print_vector('a',vector_sequence);//////
+    // std::cout   << "Time to process a range of "
+    //             /*<< this->number_of_elements*/
+    //             <<  " elements with std::vector\t: "
+    //             << end - start
+    //             << " us"
+    //             << std::endl;
 }
 
 
