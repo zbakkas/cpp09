@@ -162,6 +162,61 @@ void    sort_vector( std::vector<int> &vector_sequence)
 }
 
 
+void sort_vector2(std::vector<int> &vector_sequence)
+{
+    size_t i, j;
+    clock_t start, end;
+    std::vector<int>::iterator insertion_point;
+
+    std::vector<int> vector_main; // Main vector (sorted during the process)
+    std::vector<int> vector_pend; // Pending elements
+    int jacobstal[14] = {0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731};
+
+    // Step 1: Split into pairs
+    int is_pended = -1;
+    if (vector_sequence.size() % 2 != 0)
+        is_pended = vector_sequence.back(); // Handle odd size case
+
+    for (i = 0; i + 1 < vector_sequence.size(); i += 2) 
+    {
+        int max_val = std::max(vector_sequence[i], vector_sequence[i + 1]);
+        int min_val = std::min(vector_sequence[i], vector_sequence[i + 1]);
+        vector_main.push_back(max_val);
+        vector_pend.push_back(min_val);
+    }
+    if (is_pended != -1)
+        vector_pend.push_back(is_pended); // Add the leftover element to pending
+
+    // Step 2: Sort the main group
+    std::sort(vector_main.begin(), vector_main.end());
+
+    // Step 3: Iteratively insert pending elements using Jacobsthal numbers
+    for (i = 2; i < vector_pend.size(); ++i) 
+    {
+        j = jacobstal[i];
+        if (j > vector_pend.size())
+            break; // If Jacobsthal index exceeds vector_pend size, stop
+        insertion_point = std::lower_bound(vector_main.begin(), vector_main.end(), vector_pend[j - 1]);
+        vector_main.insert(insertion_point, vector_pend[j - 1]);
+        vector_pend.erase(vector_pend.begin() + (j - 1));
+    }
+
+    // Step 4: Insert remaining pending elements into the main group
+    for (i = 0; i < vector_pend.size(); ++i) {
+        insertion_point = std::lower_bound(vector_main.begin(), vector_main.end(), vector_pend[i]);
+        vector_main.insert(insertion_point, vector_pend[i]);
+    }
+
+    // Step 5: Output results
+    vector_sequence = vector_main; // Update the original vector
+    end = clock();
+
+    print_vector('a', vector_sequence); // Print sorted vector
+    std::cout << "Time to process a range of "
+              << vector_sequence.size() << " elements with std::vector: "
+              << end - start << " us" << std::endl;
+}
+
 
 void    sort_deque(std::deque <int> & deque_sequence)
 {
